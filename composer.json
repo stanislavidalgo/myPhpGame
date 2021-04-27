@@ -1,0 +1,12 @@
+{
+    "name": "codeacademy/the-game",
+    "description": "web browsing game",
+    "license": ".",
+    "authors": [
+        {
+            "name": "Stanislovas",
+            "email": "stanislavidalgo@gmail.com"
+        }
+    ],
+    "require": {}
+}
