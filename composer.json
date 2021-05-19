@@ -1,12 +1,19 @@
 {
-    "name": "codeacademy/the-game",
-    "description": "web browsing game",
-    "license": ".",
+    "name": "codeacademy/mars-game",
+    "description": "MVC web browsing game",
+    "type": "project",
+    "require": {
+        "psr/log": "^1.1"
+    },
+    "autoload": {
+        "psr-4": {
+            "": "app/code"
+        }
+    },
     "authors": [
         {
-            "name": "Stanislovas",
-            "email": "stanislavidalgo@gmail.com"
+            "name": "Arnoldas",
+            "email": "nikaflash@gmail.com"
         }
-    ],
-    "require": {}
+    ]
 }
