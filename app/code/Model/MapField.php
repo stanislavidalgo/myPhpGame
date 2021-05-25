@@ -4,6 +4,7 @@ namespace Model;
 
 use Core\Db;
 use Model\ModelAbstract;
+use Model\City;
 
 class MapField extends ModelAbstract
 {
@@ -20,6 +21,18 @@ class MapField extends ModelAbstract
     private $fieldTypeId;
 
     private $userId;
+
+    private $city;
+
+    /**
+     * @return mixed
+     */
+    public function getCity()
+    {
+        $cityObject = new City();
+        $this->city = $cityObject->loadByMapFieldId($this->id);
+        return $this->city;
+    }
 
     /**
      * @return integer
@@ -129,6 +142,5 @@ class MapField extends ModelAbstract
         $result = $db->select()->from(self::TABLE_NAME)->where(self::USER_ID_COLUMN, $userId)->get();
         return $result;
     }
-
 
 }

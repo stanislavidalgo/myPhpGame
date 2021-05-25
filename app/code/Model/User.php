@@ -4,6 +4,8 @@ namespace Model;
 
 use Model\ModelAbstract;
 use Core\Db;
+use Model\MapField;
+use Model\UserResource;
 
 class User extends ModelAbstract
 {
@@ -16,6 +18,27 @@ class User extends ModelAbstract
     private $userName;
     private $password;
     private $email;
+
+    private $fields = [];
+
+    /**
+     * @return mixed
+     */
+    public function getFields()
+    {
+        $fields = MapField::getUserFields($this->id);
+        if(!empty($fields)){
+            foreach ($fields as $field){
+                $fieldObject = new MapField();
+                $fieldObject->load($field['id']);
+                $this->fields[] = $fieldObject;
+            }
+        }
+
+        return $this->fields;
+    }
+
+
 
     public function getUserName()
     {
@@ -62,10 +85,7 @@ class User extends ModelAbstract
     {
         $db = new Db();
         $user = $db->select()->from(self::TABLE_NAME)->where(self::EMAIL_COLUMN, $email)->getOne();
-        $this->id = $user[self::ID_COLUMN];
-        $this->userName = $user[self::NAME_COLUMN];
-        $this->email = $user[self::EMAIL_COLUMN];
-        $this->password = $user[self::PASSWORD_COLUMN];
+        $this->load($user['id']);
         return $this;
     }
 
@@ -107,5 +127,19 @@ class User extends ModelAbstract
         $result = $db->select()->from(self::TABLE_NAME)->get();
         return $result;
     }
+
+    public function getResources()
+    {
+        $resources = [];
+        $userResourses = new UserResource();
+        $resoursesArray =  $userResourses->loadUserResourses($this->id);
+        foreach ($resoursesArray as $resource){
+            $resourceObject = new UserResource();
+            $resources[] = $resourceObject->load($resource['id']);
+        }
+
+        return $resources;
+    }
+
 
 }

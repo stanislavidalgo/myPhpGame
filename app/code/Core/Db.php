@@ -36,7 +36,6 @@ class Db
     // Execute query
     public function exec()
     {
-
         if ($this->pdo->query($this->sql)) {
             $lastId = $this->pdo->lastInsertId();
             return $lastId;
@@ -49,17 +48,13 @@ class Db
     // Get Results
     public function get()
     {
-        if ($statment = $this->pdo->query($this->sql)) {
-            $rez = [];
-            while ($row = $statment->fetch()) {
-                $rez[] = $row;
-            }
-
-            return $rez;
-        } else {
-            echo "Error: " . $this->sql . "<br>";
-            print_r($this->pdo->errorInfo());
+        $statment = $this->pdo->query($this->sql);
+        $rez = [];
+        while ($row = $statment->fetch()) {
+            $rez[] = $row;
         }
+
+        return $rez;
     }
 
     public function getOne()
@@ -70,7 +65,7 @@ class Db
             $rez[] = $row;
         }
 
-        return $rez[0];
+        return isset($rez[0]) ? $rez[0] : null;
     }
 
 
@@ -89,7 +84,7 @@ class Db
     public function where($field, $value)
     {
         $this->sql .= 'WHERE ' . $field . '="' . $value . '"';
-        //        $this->sql.="WHERE $field = '$value'";
+//        $this->sql.="WHERE $field = '$value'";
         return $this;
     }
 
@@ -145,7 +140,20 @@ class Db
 
     public function truncate($table)
     {
-        $this->sql = 'TRUNCATE ' . $table;
+        $this->sql = 'TRUNCATE '.$table;
         return $this;
     }
+
+    public function left($table)
+    {
+        $this->sql .= 'LEFT JOIN '.$table.' ';
+        return $this;
+    }
+
+    public function on($table1, $column1, $table2, $column2)
+    {
+        $this->sql .= 'ON '.$table1.'.'.$column1 .' = '.$table2.'.'.$column2.' ';
+        return $this;
+    }
+
 }

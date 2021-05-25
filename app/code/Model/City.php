@@ -5,6 +5,8 @@ namespace Model;
 
 use Model\ModelAbstract;
 use Core\Db;
+use Model\Building;
+use Model\Unit;
 
 class City extends ModelAbstract
 {
@@ -14,6 +16,20 @@ class City extends ModelAbstract
 
     private $name;
     private $mapFieldId;
+    private $buildings;
+
+    /**
+     * @return mixed
+     */
+    public function getBuildings()
+    {
+        $buildingsIds = Building::loadByCityId($this->id);
+        foreach ($buildingsIds as $id){
+            $buildingObject = new Building();
+            $this->buildings[] = $buildingObject->load($id['id']);
+        }
+        return  $this->buildings;
+    }
 
     /**
      * @return mixed
@@ -55,6 +71,18 @@ class City extends ModelAbstract
         $this->name = $result[self::NAME_COLUMN];
         $this->mapFieldId = $result[self::MAP_FIELD_ID_COLUMN];
         return $this;
+
+    }
+
+    public function loadByMapFieldId($mapFieldId)
+    {
+        $db = new Db();
+        $result = $db->select()->from(self::TABLE_NAME)->where(self::MAP_FIELD_ID_COLUMN, $mapFieldId)->getOne();
+        if(!empty($result)){
+            $this->load($result[self::ID_COLUMN]);
+            return $this;
+        }
+        return null;
     }
 
 
@@ -64,6 +92,19 @@ class City extends ModelAbstract
             self::NAME_COLUMN => $this->name,
             self::MAP_FIELD_ID_COLUMN => $this->mapFieldId
         ];
+    }
+
+
+    public function getUnits()
+    {
+        $units = [];
+        $unitsIds = Unit::getUserUnitsIds($this->id);
+        foreach ($unitsIds as $id){
+            $unitObject = new Unit();
+            $units[] = $unitObject->load($id['id']);
+        }
+
+        return $units;
     }
 
 }

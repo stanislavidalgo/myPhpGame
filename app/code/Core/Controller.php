@@ -55,4 +55,5 @@ class Controller
             $this->data['resources'] = false;
         }
     }
+
 }
